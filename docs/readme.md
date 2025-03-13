@@ -20,10 +20,14 @@ Before starting, ensure you have:
 
 ## Getting Started
 
-### 1. Clone the Repository
+### 1. Fork & Clone the Repository
+
+1. **Fork the repository** to your GitHub account
+
+2. Then clone:
 
 ```bash
-git clone https://github.com/microsoft/aro-migration-hackathon.git
+git clone https://github.com/<yourname>/aro-migration-hackathon.git
 cd aro-migration-hackathon
 ```
 
@@ -256,11 +260,10 @@ db.tasks.find().pretty()
 
 ### Challenge 2: GitHub CI/CD Pipeline
 
-1. **Fork the repository** to your GitHub account
-2. **Set up GitHub Actions** for continuous integration and deployment
-3. **Configure GitHub Secrets** for secure pipeline execution
-4. **Implement automated testing** in the pipeline
-5. **Create a workflow** that deploys to ARO when changes are pushed to main
+1. **Set up GitHub Actions** for continuous integration and deployment
+2. **Configure GitHub Secrets** for secure pipeline execution
+3. **Implement automated testing** in the pipeline
+4. **Create a workflow** that deploys to ARO when changes are pushed to main
 
 #### Setting up CI/CD for ARO Deployment
 
