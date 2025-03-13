@@ -77,7 +77,7 @@ docker-compose up
 Once the application is running, you can access:
 - **Frontend**: http://localhost
 - **Backend API**: http://localhost:3001/api/tasks
-- **MongoDB Express**: http://localhost:8081 d
+- **MongoDB Express**: http://localhost:8081 
 
 ### 3. Exploring the Database (Optional)
 
