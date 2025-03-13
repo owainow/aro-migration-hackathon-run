@@ -154,7 +154,9 @@ Alternatively, you can edit the files manually:
 ##### Step 1: Build and Push Container Images
 
 ```bash
-# Log in to your ACR. You may need to load your environment file using the command "source .env"
+# Log in to your ACR. 
+echo You may need to load your environment file using the command "source .env"
+source .env
 az acr login --name $ACR_NAME
 
 # Navigate to the frontend directory
@@ -182,6 +184,7 @@ docker push $ACR_NAME.azurecr.io/taskmanager-backend:latest
 ```bash
 # Log in to your ARO cluster through the UI
 echo Login to the Openshift Portal here: $OPENSHIFT_CONSOLE_URL
+echo You can find your username and password in your .env file. 
 
 # Navigate to your username in the top right and select "copy login token"
 
