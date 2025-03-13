@@ -241,11 +241,11 @@ oc get pods
 # Check the created routes
 oc get routes
 
-# Test the backend API
+# Test the backend API and expect an empty response (Just no errors)
 curl http://$(oc get route backend-api -o jsonpath='{.spec.host}')/api/tasks
 
 # Open the frontend URL in your browser
-echo "Frontend URL: http://$(oc get route frontend -o jsonpath='{.spec.host}')"
+echo "Frontend URL: http://$(oc get route frontend-route -o jsonpath='{.spec.host}')"
 ```
 Now create a task and check the frontend has called the backend and put the entry in the db.
 ```bash
