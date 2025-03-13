@@ -1,0 +1,12 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: api-route
+  namespace: task-manager
+spec:
+  path: /api
+  to:
+    kind: Service
+    name: backend-api
+  port:
+    targetPort: 3001

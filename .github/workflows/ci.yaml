@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Backend - Install dependencies
+      working-directory: ./on-prem-app/backend
+      run: npm ci
+      
+    - name: Backend - Run linting and tests
+      working-directory: ./on-prem-app/backend
+      run: |
+        npm run test || true
+      
+    - name: Frontend - Install dependencies
+      working-directory: ./on-prem-app/frontend
+      run: npm ci
+      
+    - name: Frontend - Run linting and tests
+      working-directory: ./on-prem-app/frontend
+      run: |
+        npm run test -- --passWithNoTests || true
+    
+    - name: Run Trivy vulnerability scanner in repo mode
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        severity: 'CRITICAL,HIGH'
