@@ -301,12 +301,6 @@ Your CI/CD pipeline should handle the entire process from building your applicat
 - Implement Blue/Green deployment for zero-downtime updates
 - Add post-deployment health checks to verify successful deployment
 
-**Best Practices:**
-- Tag images with both the commit SHA and semantic version
-- Implement automated rollback if deployment health checks fail
-- Use GitHub environments to require approvals for production deployments
-- Run security scanning on your container images before deployment
-
 ### Challenge 3: Database Modernization with Azure Cosmos DB
 
 While containerised MongoDB within ARO works for development, a production-ready architecture should leverage managed database services for better scalability, reliability, and operational efficiency. I rebuke containerised databases...
