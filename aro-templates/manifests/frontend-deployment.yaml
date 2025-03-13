@@ -73,7 +73,6 @@ metadata:
     app.kubernetes.io/component: frontend
     app.kubernetes.io/part-of: taskmanager-app
 spec:
-  host: frontend-route-task-manager.apps.zys6uf49.uksouth.aroapp.io
   to:
     kind: Service
     name: frontend
