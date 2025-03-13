@@ -140,8 +140,8 @@ Your team will need to complete the following challenges:
 cd ../..
 
 
-sed -i "s|\${REGISTRY_URL}/task-manager-backend|$REGISTRY_URL/taskmanager-backend|g" aro-templates/manifests/backend-deployment.yaml
-sed -i "s|\${REGISTRY_URL}/task-manager-frontend|$REGISTRY_URL/taskmanager-frontend|g" aro-templates/manifests/frontend-deployment.yaml
+sed -i "s|\${REGISTRY_URL}/task-manager-backend|$REGISTRY_URL/task-manager-backend|g" aro-templates/manifests/backend-deployment.yaml
+sed -i "s|\${REGISTRY_URL}/task-manager-frontend|$REGISTRY_URL/task-manager-frontend|g" aro-templates/manifests/frontend-deployment.yaml
 ```
 
 Alternatively, you can edit the files manually:
@@ -163,20 +163,20 @@ az acr login --name $ACR_NAME
 cd on-prem-app/frontend
 
 # Build using the OpenShift-specific Dockerfile
-docker build -t $ACR_NAME.azurecr.io/taskmanager-frontend:latest --build-arg REACT_APP_API_URL=/api -f Dockerfile.openshift .
+docker build -t $ACR_NAME.azurecr.io/task-manager-frontend:latest --build-arg REACT_APP_API_URL=/api -f Dockerfile.openshift .
 
 
 # Push the frontend image
-docker push $ACR_NAME.azurecr.io/taskmanager-frontend:latest
+docker push $ACR_NAME.azurecr.io/task-manager-frontend:latest
 
 # Navigate to the backend directory
 cd ../backend
 
 # Build and tag the backend image
-docker build -t $ACR_NAME.azurecr.io/taskmanager-backend:latest .
+docker build -t $ACR_NAME.azurecr.io/task-manager-backend:latest .
 
 # Push the backend image
-docker push $ACR_NAME.azurecr.io/taskmanager-backend:latest
+docker push $ACR_NAME.azurecr.io/task-manager-backend:latest
 ```
 
 ##### Step 2: Log in to ARO Using the CLI
