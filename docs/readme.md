@@ -281,7 +281,7 @@ db.tasks.find().pretty()
 
 #### Setting up CI/CD for ARO Deployment
 
-Your CI/CD pipeline should handle the entire process from building your application to deploying it on your ARO cluster:
+Your CI/CD pipeline will build and push your container image. We will also add some of our ARO cluster details as we may want to use them later!
 
 You will need to add the following secrets from your env file to your repo.
 
@@ -295,6 +295,7 @@ You will need to add the following secrets from your env file to your repo.
 Your pipelines are triggered on commits, PR's or through manual triggers. 
 
 **Advanced Deployment Options:**
+- Consider using your pipeline to manage the app deployment not just the build. 
 - Consider setting up multiple environments (dev, staging, production)
 - Implement Blue/Green deployment for zero-downtime updates
 - Add post-deployment health checks to verify successful deployment
