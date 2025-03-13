@@ -290,7 +290,7 @@ You will need to add the following secrets from your env file to your repo.
 - `REGISTRY_USERNAME`: Username for your container registry (usually the registry name)
 - `REGISTRY_PASSWORD`: Password or access key for your container registry
 - `OPENSHIFT_SERVER`: The API server URL of your ARO cluster
-- `OPENSHIFT_TOKEN`: Authentication token for your ARO cluster
+- `OPENSHIFT_TOKEN`: Authentication token for your ARO cluster (Found in Openshift Portal)
 
 Your pipelines are triggered on commits, PR's or through manual triggers. 
 
