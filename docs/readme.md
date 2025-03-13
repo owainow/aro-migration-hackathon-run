@@ -272,7 +272,6 @@ db.tasks.find().pretty()
 4. Test the application by creating, editing, and deleting tasks
 
 
-
 ### Challenge 2: GitHub CI/CD Pipeline
 
 1. **Set up GitHub Actions** for continuous integration and deployment
@@ -291,10 +290,7 @@ Your CI/CD pipeline should handle the entire process from building your applicat
 - `OPENSHIFT_SERVER`: The API server URL of your ARO cluster
 - `OPENSHIFT_TOKEN`: Authentication token for your ARO cluster
 
-**Pipeline Structure:**
-- **Build Stage**: Compile code, run tests, and build container images
-- **Push Stage**: Push images to your container registry with proper tags
-- **Deploy Stage**: Deploy the application to your ARO cluster using OpenShift CLI
+Your pipelines are triggered on commits, PR's or through manual triggers. 
 
 **Advanced Deployment Options:**
 - Consider setting up multiple environments (dev, staging, production)

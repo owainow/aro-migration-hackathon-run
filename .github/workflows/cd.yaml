@@ -6,17 +6,6 @@ on:
   pull_request:
     types: [opened, synchronize]
     branches: [ main ]
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to'
-        required: true
-        default: 'dev'
-        type: choice
-        options:
-          - dev
-          - staging
-          - prod
 
 env:
   REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
@@ -84,126 +73,10 @@ jobs:
         cache-from: type=registry,ref=${{ env.REGISTRY_URL }}/task-manager-frontend:buildcache
         cache-to: type=registry,ref=${{ env.REGISTRY_URL }}/task-manager-frontend:buildcache,mode=max
 
-  deploy-dev:
-    name: Deploy to Development
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
-    environment: development
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Install OpenShift CLI
-      uses: redhat-actions/openshift-tools-installer@v1
-      with:
-        oc: latest
-        
-    - name: Authenticate with OpenShift
-      run: |
-        oc login --token=${{ env.OPENSHIFT_TOKEN }} --server=${{ env.OPENSHIFT_SERVER }}
-        
-    - name: Deploy to ARO Development
-      run: |
-        export REGISTRY_URL=${{ env.REGISTRY_URL }}
-        export IMAGE_TAG=sha-$(git rev-parse --short HEAD)
-        
-        # Create or update project
-        oc new-project task-manager-dev 2>/dev/null || echo "Project exists"
-        
-        # Apply manifests with proper substitution
-        envsubst < ./aro-templates/manifests/namespace.yaml | oc apply -f -
-        envsubst < ./aro-templates/manifests/mongodb-deployment.yaml | oc apply -f -
-        
-        # Update image tags in deployment files and apply
-        sed -i "s|image: \${REGISTRY_URL}/task-manager-backend:latest|image: ${REGISTRY_URL}/task-manager-backend:${IMAGE_TAG}|g" ./aro-templates/manifests/backend-deployment.yaml
-        sed -i "s|image: \${REGISTRY_URL}/task-manager-frontend:latest|image: ${REGISTRY_URL}/task-manager-frontend:${IMAGE_TAG}|g" ./aro-templates/manifests/frontend-deployment.yaml
-        
-        envsubst < ./aro-templates/manifests/backend-deployment.yaml | oc apply -f -
-        envsubst < ./aro-templates/manifests/frontend-deployment.yaml | oc apply -f -
-        envsubst < ./aro-templates/manifests/api-route.yaml | oc apply -f -
-        
-    - name: Verify deployment
-      run: |
-        oc get pods -n task-manager-dev
-        oc get routes -n task-manager-dev
-        
-    - name: Wait for deployment and check health
-      run: |
-        # Wait for backend deployment to roll out
-        oc rollout status deployment/backend-api -n task-manager-dev --timeout=180s
-        
-        # Wait for frontend deployment to roll out
-        oc rollout status deployment/frontend -n task-manager-dev --timeout=180s
-        
-        # Get the route URLs
-        FRONTEND_URL=$(oc get route frontend-route -n task-manager-dev -o jsonpath='{.spec.host}')
-        API_URL=$(oc get route api-route -n task-manager-dev -o jsonpath='{.spec.host}')
-        
-        # Check if services are responding
-        curl -f -s https://${FRONTEND_URL} || echo "Frontend may not be ready yet"
-        curl -f -s https://${API_URL}/health || echo "Backend may not be ready yet"
-        
-        echo "Application deployed to: https://${FRONTEND_URL}"
-
-  deploy-staging:
-    name: Deploy to Staging
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging'
-    environment:
-      name: staging
-      url: ${{ steps.get-url.outputs.route-url }}
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Install OpenShift CLI
-      uses: redhat-actions/openshift-tools-installer@v1
-      with:
-        oc: latest
-        
-    - name: Authenticate with OpenShift
-      run: |
-        oc login --token=${{ env.OPENSHIFT_TOKEN }} --server=${{ env.OPENSHIFT_SERVER }}
-        
-    - name: Deploy to ARO Staging
-      run: |
-        export REGISTRY_URL=${{ env.REGISTRY_URL }}
-        export IMAGE_TAG=sha-$(git rev-parse --short HEAD)
-        
-        # Create or update project
-        oc new-project task-manager-staging 2>/dev/null || echo "Project exists"
-        
-        # Apply all manifests with proper substitution
-        find ./aro-templates/manifests -name "*.yaml" -exec bash -c 'envsubst < {} | sed "s/task-manager/task-manager-staging/g" | oc apply -f -' \;
-        
-        # Update image tags in deployment files
-        oc set image deployment/backend-api backend-api=${REGISTRY_URL}/task-manager-backend:${IMAGE_TAG} -n task-manager-staging
-        oc set image deployment/frontend frontend=${REGISTRY_URL}/task-manager-frontend:${IMAGE_TAG} -n task-manager-staging
-    
-    - name: Get Route URL
-      id: get-url
-      run: |
-        ROUTE_URL=$(oc get route frontend-route -n task-manager-staging -o jsonpath='{.spec.host}')
-        echo "route-url=https://$ROUTE_URL" >> $GITHUB_OUTPUT
-
-    - name: Verify deployment health
-      run: |
-        oc rollout status deployment/backend-api -n task-manager-staging --timeout=180s
-        oc rollout status deployment/frontend -n task-manager-staging --timeout=180s
-
   deploy-prod:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [build, deploy-staging]
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod'
-    environment:
-      name: production
-      url: ${{ steps.get-url.outputs.route-url }}
-    
+    needs: [build]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
