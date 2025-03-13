@@ -283,6 +283,8 @@ db.tasks.find().pretty()
 
 Your CI/CD pipeline should handle the entire process from building your application to deploying it on your ARO cluster:
 
+You will need to add the following secrets from your env file to your repo.
+
 **Required GitHub Secrets:**
 - `REGISTRY_URL`: The URL of your Azure Container Registry (e.g., myregistry.azurecr.io)
 - `REGISTRY_USERNAME`: Username for your container registry (usually the registry name)
