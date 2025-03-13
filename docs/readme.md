@@ -41,6 +41,7 @@ chmod +x ./scripts/setup-azure-resources.sh
 ```
 
 If using WSL then there may be a syntax error on the cluster creation. I would advise you use powershell instead with the following two commands:
+
 ```powershell
 (Get-Content .\scripts\setup-azure-resources.sh -Raw) -replace "`r`n", "`n" | Set-Content .\scripts\setup-azure-resources.sh -NoNewline
 ```
@@ -153,9 +154,12 @@ Alternatively, you can edit the files manually:
 
 ##### Step 1: Build and Push Container Images
 
+If running these commands in WSL please switch to powershell as your build arg may be passed through incorrectly. 
+
 ```bash
 # Log in to your ACR. 
 echo You may need to load your environment file using the command "source .env"
+
 source .env
 az acr login --name $ACR_NAME
 
