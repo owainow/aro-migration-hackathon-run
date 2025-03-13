@@ -38,8 +38,16 @@ We've provided an interactive script that will create all the necessary Azure re
 ```bash
 # Make the script executable
 chmod +x ./scripts/setup-azure-resources.sh
+```
 
-# Run the setup script
+If using WSL then there may be a syntax error on the cluster creation. I would advise you use powershell instead with the following two commands:
+```powershell
+(Get-Content .\scripts\setup-azure-resources.sh -Raw) -replace "`r`n", "`n" | Set-Content .\scripts\setup-azure-resources.sh -NoNewline
+```
+```bash
+bash ./scripts/setup-azure-resources.sh
+
+# Run the setup script 
 ./scripts/setup-azure-resources.sh
 ```
 
