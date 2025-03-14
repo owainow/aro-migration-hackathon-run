@@ -22,7 +22,7 @@ spec:
         fsGroup: 1001
       containers:
       - name: frontend
-        image: ${REGISTRY_URL}/task-manager-frontend:latest
+        image: oowaroclusteracr.azurecr.io/task-manager-frontend:latest
         ports:
         - containerPort: 8080
           name: http

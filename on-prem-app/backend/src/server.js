@@ -10,7 +10,18 @@ app.use(express.json());
 
 // DB Connection
 const DB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/taskmanager';
-mongoose.connect(DB_URI)
+const DB_OPTIONS = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  ...(process.env.MONGODB_URI?.includes('cosmos.azure.com') ? {
+    // Cosmos DB specific options
+    retryWrites: false,
+    ssl: true,
+    tlsAllowInvalidCertificates: false,
+  } : {})
+};
+
+mongoose.connect(DB_URI, DB_OPTIONS)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
