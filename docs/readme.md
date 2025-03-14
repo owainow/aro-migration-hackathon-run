@@ -44,10 +44,10 @@ If using WSL then there may be a syntax error on the cluster creation. I would a
 
 ```powershell
 (Get-Content .\scripts\setup-azure-resources.sh -Raw) -replace "`r`n", "`n" | Set-Content .\scripts\setup-azure-resources.sh -NoNewline
+
+bash ./scripts/setup-azure-resources.sh
 ```
 ```bash
-bash ./scripts/setup-azure-resources.sh
-
 # Run the setup script 
 ./scripts/setup-azure-resources.sh
 ```
